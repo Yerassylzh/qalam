@@ -17,6 +17,8 @@ i18next.init({
   },
 });
 
+const adminSecretKey = process.env.ADMIN_SECRET as string;
+
 z.setErrorMap(zodI18nMap);
 
 const signupSchema = z.object({
@@ -35,6 +37,7 @@ const signupSchema = z.object({
     .string()
     .min(8, { message: "Пароль должен содержать минимум 8 символов" })
     .trim(),
+  secretKey: z.string().trim()
 });
 
 export async function signup(prevState: object, formData: FormData) {
@@ -47,9 +50,22 @@ export async function signup(prevState: object, formData: FormData) {
     };
   }
 
-  const { name, surname, email, password } = result.data;
-  const passwordHash = await hashPassword(password);
+  const { name, surname, email, password, secretKey } = result.data;
 
+  if (secretKey !== adminSecretKey) {
+    return {
+      formData: Object.fromEntries(formData),
+      errors: {
+        name: [],
+        surname: [],
+        email: [],
+        password: [],
+        secretKey: ["Невалидный секретный ключ"]
+      }
+    }
+  }
+
+  const passwordHash = await hashPassword(password);
   const existingUser: User = (await prisma.user.findUnique({
     where: { email: email },
   })) as User;
@@ -72,7 +88,7 @@ export async function signup(prevState: object, formData: FormData) {
       surname: surname,
       email: email,
       password: passwordHash,
-      isAdmin: false,
+      isAdmin: true,
     },
     select: {
       id: true
@@ -86,33 +102,10 @@ export async function signup(prevState: object, formData: FormData) {
       name: user.name,
       surname: user.surname,
       email: user.email,
-      isAdmin: false,
+      isAdmin: true,
     },
     duration
   );
 
-  const interestNames = formData.get("interests")?.toString().split(" ") as string[];
-  await linkInterestsToUser(user.id, interestNames);
-
-  redirect("/");
-}
-
-async function linkInterestsToUser(userId: number, interestNames: string[]) {
-  const interests = await prisma.userInterest.findMany({
-    where: {
-      name: { in: interestNames },
-    },
-    select: {
-      id: true,
-    },
-  });
-
-  const linkData = interests.map((interest) => ({
-    userId: userId,
-    interestId: interest.id,
-  }));
-
-  await prisma.userInterestLink.createMany({
-    data: linkData,
-  })
+  redirect("/admin");
 }

@@ -51,7 +51,7 @@ export function AdminUserRoleChoice() {
     >
       <div className="w-full flex justify-between items-center">
         <Image
-          src="/adminUser.svg"
+          src="/userAdmin.svg"
           alt="A"
           width={32}
           height={32}

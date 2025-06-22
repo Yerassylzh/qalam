@@ -1,12 +1,12 @@
 "use client";
 
 import { useActionState, useCallback } from "react";
-import LabelledInput from "../form/LabelledInput";
-import { signup } from "../../lib/users/signup";
-import Input from "../form/Input";
-import PasswordInput from "../form/PasswordInput";
-import ArrowGreenButton from "../form/ArrowGreenButton";
-import { useSignupContext } from "../../context/SignupContext";
+import { signup } from "../lib/users/signupAdmin";
+import LabelledInput from "./form/LabelledInput";
+import Input from "./form/Input";
+import PasswordInput from "./form/PasswordInput";
+import ArrowGreenButton from "./form/ArrowGreenButton";
+import Link from "next/link";
 
 type SignupState = {
   formData: { [k: string]: FormDataEntryValue };
@@ -15,18 +15,18 @@ type SignupState = {
     surname?: string[];
     email?: string[];
     password?: string[];
+    secretKey?: string[];
   };
 };
 
-export function SignupForm() {
-  const { interests } = useSignupContext();
+export default function SignupForm() {
   const [signupData, signupAction, isPending] = useActionState(
     signup,
     {} as SignupState
   );
 
   const getError = useCallback(
-    (field: "name" | "surname" | "email" | "password"): string | null => {
+    (field: "name" | "surname" | "email" | "password" | "secretKey"): string | null => {
       if (
         signupData?.errors &&
         signupData.errors[field] &&
@@ -81,6 +81,18 @@ export function SignupForm() {
         }
       />
       <LabelledInput
+        label="Секретный ключ"
+        inputWidget={
+          <PasswordInput
+            placeholder="Введите секретный ключ"
+            name="secretKey"
+            error={getError("secretKey")}
+            defaultValue={signupData?.formData?.["secretKey"]?.toString()}
+            required
+          />
+        }
+      />
+      <LabelledInput
         label="Пароль"
         inputWidget={
           <PasswordInput
@@ -92,12 +104,19 @@ export function SignupForm() {
           />
         }
       />
-      <input type="text" name="interests" className="hidden" value={interests.join(" ")} readOnly />
-      <ArrowGreenButton
-        className="w-full"
-        text="Создать аккаунт"
-        isLoading={isPending}
-      />
+      <div className="flex flex-col justify-center gap-[12px] items-center">
+        <ArrowGreenButton
+          className="w-full"
+          text="Создать аккаунт"
+          isLoading={isPending}
+        />
+        <div className="flex gap-[5px]">
+          <p className="text-[15px] text-gray-700">Уже есть аккаунт?</p>
+          <Link href="/admin/login" className="text-green-600 text-[15px]">
+            Войти
+          </Link>
+        </div>
+      </div>
     </form>
   );
 }

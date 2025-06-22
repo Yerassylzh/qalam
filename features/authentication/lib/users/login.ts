@@ -1,89 +1,63 @@
-// "use server";
+"use server";
 
-// import { z } from "zod";
-// import { prisma } from "@/lib/prisma";
-// import {
-//   createSession,
-//   deleteSession,
-// } from "@/features/authentication/lib/actions/session";
-// import { redirect } from "next/navigation";
-// import { hashPassword } from "@/utils/passwords";
-// import { User } from "@/types/db";
+import { z } from "zod";
+import { prisma } from "@/lib/prisma";
+import {
+  createSession,
+  deleteSession,
+} from "@/features/authentication/lib/users/session";
+import { redirect } from "next/navigation";
+import { hashPassword } from "@/utils/passwords";
+import { User } from "@/types/user";
 
-// const loginSchema = z.object({
-//   email: z.string().email().trim(),
-//   password: z
-//     .string()
-//     .min(8, { message: "Password must be at least 8 characters" })
-//     .trim(),
-// });
 
-// type Errors = {
-//   name?: string[];
-//   email: string[];
-//   password?: string[];
-// };
+const loginSchema = z.object({
+  email: z.string().email().trim(),
+  password: z
+    .string()
+    .min(8, { message: "Password must be at least 8 characters" })
+    .trim(),
+});
 
-// export async function login(prevState: object, formData: FormData) {
-//   const result = loginSchema.safeParse(Object.fromEntries(formData));
+type Errors = {
+  email: string[];
+  password: string[];
+};
 
-//   if (!result.success) {
-//     return {
-//       formData: Object.fromEntries(formData),
-//       errors: result.error.flatten().fieldErrors as Errors,
-//     };
-//   }
+export async function login(prevState: object, formData: FormData, isAdmin: boolean = false, redirectTo: string = "/") {
+  const result = loginSchema.safeParse(Object.fromEntries(formData));
 
-//   const { email, password } = result.data;
-//   const passwordHash = await hashPassword(password);
+  if (!result.success) {
+    return {
+      formData: Object.fromEntries(formData),
+      errors: result.error.flatten().fieldErrors as Errors,
+    };
+  }
 
-//   const user: User = (await prisma.user.findUnique({
-//     where: { email: email },
-//   })) as User;
+  const { email, password } = result.data;
+  const passwordHash = await hashPassword(password);
 
-//   const isOAuth = user && user.password === null;
-//   if (isOAuth) {
-//     return {
-//       formData: Object.fromEntries(formData),
-//       errors: {
-//         email: ["This email is linked to Github or Google"],
-//         password: [],
-//       },
-//     };
-//   }
+  const user: User = (await prisma.user.findUnique({
+    where: { email: email, isAdmin: isAdmin ? isAdmin : false },
+  })) as User;
 
-//   if (!user || user.password !== passwordHash) {
-//     return {
-//       formData: Object.fromEntries(formData),
-//       errors: {
-//         email: [],
-//         password: ["Invalid handle or password"],
-//       },
-//     };
-//   }
+  if (!user || user.password !== passwordHash) {
+    return {
+      formData: Object.fromEntries(formData),
+      errors: {
+        email: [],
+        password: ["Неправильная почта или пароль"],
+      },
+    };
+  }
 
-//   const days90 = 90 * 24 * 60 * 60 * 1000;
-//   await createSession({ name: user.name, email: user.email }, days90);
+  const days30 = 30 * 24 * 60 * 60 * 1000;
+  await createSession({ id: user.id, name: user.name, surname: user.surname, email: user.email, isAdmin: user.isAdmin }, days30);
 
-//   redirect("/");
-// }
+  redirect(redirectTo);
+}
 
-// export async function logout() {
-//   await deleteSession();
-//   redirect("/login");
-// }
-
-// export async function createIfDoesnotExist(email: string, name: string) {
-//   const existingUser = await prisma.user.findUnique({
-//     where: { email: email },
-//   });
-
-//   if (!existingUser) {
-//     await prisma.user.create({
-//       data: {
-//         email: email,
-//         name: name || "",
-//       },
-//     });
-//   }
-// }
+export async function logout() {
+  await deleteSession();
+  redirect("/login");
+}

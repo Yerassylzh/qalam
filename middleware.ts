@@ -5,7 +5,7 @@ import {
   deleteSession,
 } from "@/features/authentication/lib/users/session";
 
-const protectedRoutes = ["news/"];
+const protectedRoutes = ["/news"];
 const authRoutes = ["/login", "/signup", "/admin/login", "admin/signup"];
 
 export default async function middleware(req: NextRequest) {
@@ -15,7 +15,8 @@ export default async function middleware(req: NextRequest) {
   const isAuthRoute = authRoutes.includes(path);
 
   const cookie = (await cookies()).get("session")?.value;
-  const isAuth = cookie ? (await decryptToken(cookie)) !== undefined : false;
+  const userPayload = cookie ? await decryptToken(cookie) : undefined;
+  const isAuth = cookie ? userPayload !== undefined : false;
 
   // Session is expired but still inside of storage
   if (cookie && !isAuth) {
@@ -26,8 +27,18 @@ export default async function middleware(req: NextRequest) {
     if (isAuthRoute) {
       return NextResponse.redirect(new URL("/", req.nextUrl));
     }
+
+    if (userPayload?.user.isAdmin) {
+      if (isProtectedRoute) {
+        return NextResponse.redirect(new URL("/admin", req.nextUrl));
+      }
+    } else {
+      if (path === "/admin") {
+        return NextResponse.redirect(new URL("/", req.nextUrl));
+      }
+    }
   } else {
-    if (isProtectedRoute) {
+    if (isProtectedRoute || path === "/admin") {
       return NextResponse.redirect(new URL("/signup", req.nextUrl));
     }
   }
