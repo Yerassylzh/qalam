@@ -2,6 +2,8 @@ export interface UserInterestSection {
   id: number;
   icon: string;
   name: string;
+
+  interests: UserInterest[];
 }
 
 export interface UserInterest {
@@ -20,4 +22,6 @@ export interface User {
   // password is skipped
   isAdmin: boolean;
   interests?: UserInterest[];
+
+  password: string;
 }

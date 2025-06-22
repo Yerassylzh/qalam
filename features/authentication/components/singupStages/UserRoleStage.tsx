@@ -1,34 +1,31 @@
-import RadioInput from "@/components/RadioInput";
-import Image from "next/image";
-import { useSignupContext } from "../../context/SignupContext";
+"use client";
+
+import Link from "next/link";
+import {
+  AdminUserRoleChoice,
+  ContinueButton,
+  RegularUserRoleChoice,
+} from "./UserRoleStage.components";
 
 export default function UserRoleStage() {
-  const { userRole, setUserRole } = useSignupContext();
-
   return (
-    <div className="w-full min-h-full flex justify-center items-center">
-      <div className="flex md:flex-row flex-col">
-        <div className="md:w-[250px] flex-1">
-          <div className="w-full flex justify-between items-center">
-            <Image
-              src="/regularUser.svg"
-              alt="U"
-              width={32}
-              height={32}
-              unoptimized
-            />
-            <RadioInput
-              isChecked={userRole === "user"}
-              onChange={() => {
-                setUserRole("user");
-              }}
-            />
+    <>
+      <div className="w-full min-h-[max(100dvh,100vh)] flex flex-col justify-center items-center gap-[27px]">
+        <p className="text-[24px]">Сначала определим вашу роль</p>
+        <div className="flex md:flex-row flex-col gap-[24px] p-[10px]">
+          <RegularUserRoleChoice />
+          <AdminUserRoleChoice />
+        </div>
+        <div className="flex flex-col gap-[12px] items-center justify-center">
+          <ContinueButton />
+          <div className="flex gap-[5px]">
+            <p className="text-[15px] text-gray-700">Уже есть аккаунт?</p>
+            <Link href="/login" className="text-green-600 text-[15px]">
+              Войти
+            </Link>
           </div>
-          <p className="text-[16px]">
-            Я обычный пользователь, интересующийся новостями.
-          </p>
         </div>
       </div>
-    </div>
+    </>
   );
 }

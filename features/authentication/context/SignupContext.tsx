@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState } from "react";
+import useSignupStage from "../hooks/useSignupStage";
 
 interface SignupContextType {
   userRole: "user" | "admin" | null;
@@ -15,6 +16,10 @@ interface SignupContextType {
   setEmail: React.Dispatch<React.SetStateAction<string | null>>;
   password: string | null;
   setPassword: React.Dispatch<React.SetStateAction<string | null>>;
+  signupStage: "role" | "info" | "interests";
+  setSignupStage: React.Dispatch<
+    React.SetStateAction<"role" | "info" | "interests">
+  >;
 }
 
 const SignupContext = createContext<SignupContextType | undefined>(undefined);
@@ -26,6 +31,8 @@ export function SignupProvider({ children }: { children: React.ReactNode }) {
   const [surname, setSurname] = useState<string | null>(null);
   const [email, setEmail] = useState<string | null>(null);
   const [password, setPassword] = useState<string | null>(null);
+
+  const [signupStage, setSignupStage] = useSignupStage();
 
   const data = {
     userRole: userRole,
@@ -45,6 +52,9 @@ export function SignupProvider({ children }: { children: React.ReactNode }) {
 
     password: password,
     setPassword: setPassword,
+
+    signupStage: signupStage,
+    setSignupStage: setSignupStage,
   };
 
   return (

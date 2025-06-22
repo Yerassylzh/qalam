@@ -9,10 +9,18 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@prisma/adapter-libsql": "^6.10.1",
+    "@prisma/client": "^6.10.1",
+    "i18next": "^25.2.1",
+    "jose": "^6.0.11",
     "lucide-react": "^0.522.0",
     "next": "15.3.4",
+    "prisma": "^6.10.1",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-hot-toast": "^2.5.2",
+    "zod": "^3.25.67",
+    "zod-i18n-map": "^2.27.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
