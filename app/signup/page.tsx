@@ -16,7 +16,7 @@ export default function SignupStagePage() {
   };
 
   return (
-    <div className="min-h-[max(100dvh,100vh)] w-screen">
+    <div className="w-full min-h-screen flex flex-col items-center justify-center">
       <Navbar />
       {stageComponents[signupStage]}
     </div>

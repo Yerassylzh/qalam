@@ -95,7 +95,7 @@ export function RegularUserRoleChoice() {
         <RadioInput isChecked={userRole === "user"} name="userRole" />
       </div>
       <p className="text-[16px]">
-        Я редактор, который генерирует и публикует статьи
+        Я обычный пользователь, интересующийся новостями.
       </p>
     </div>
   );

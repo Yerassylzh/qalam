@@ -1,12 +1,12 @@
 "use client";
 
+import useLocalStorage from "@/hooks/useLocalStorage";
 import {
   createContext,
   Dispatch,
   ReactNode,
   SetStateAction,
   useContext,
-  useState,
 } from "react";
 
 interface BlindModeContextType {
@@ -19,7 +19,7 @@ const BlindModeContext = createContext<BlindModeContextType | undefined>(
 );
 
 export const BlindModeProvider = ({ children }: { children: ReactNode }) => {
-  const [isBlindMode, setIsBlindMode] = useState(false);
+  const [isBlindMode, setIsBlindMode] = useLocalStorage("isBlindMode", false);
 
   const data = {
     isBlindMode: isBlindMode,
