@@ -16,6 +16,7 @@ model User {
   isAdmin   Boolean
   interests UserInterestLink[] // link table
   password  String
+  Article   Article[]
 
   @@map("users")
 }
@@ -47,4 +48,17 @@ model UserInterestLink {
 
   @@id([userId, interestId])
   @@map("user_interest_links")
+}
+
+model Article {
+  id           Int      @id @default(autoincrement())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  title        String
+  bodyText     String
+  mainImageUrl String
+  is_published Boolean  @default(false)
+
+  author   User @relation(fields: [authorId], references: [id])
+  authorId Int
 }

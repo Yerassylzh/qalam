@@ -4,7 +4,13 @@ import { ArticleContent } from "../types/all";
 
 const apiKey = process.env.LLAMA_API_KEY;
 
-export async function generateArticle(content: ArticleContent, lang: "eng" | "ru" | "kk", textAmount: "low" | "standard" | "high", style: "steppe" | "formal" | "neutral"): Promise<string> {
+export async function generateArticle(content: ArticleContent, lang: "eng" | "ru" | "kk", textAmount: "low" | "standard" | "high", style: "steppe" | "formal" | "neutral"): Promise<ArticleContent> {
+  return {
+    title: "Lorem Ipsum",
+    bodyText: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+    mainImageUrl: "https://compote.slate.com/images/5294e6d0-53ed-4a4a-a350-7eaeab72ac93.jpeg?crop=1560%2C1040%2Cx0%2Cy0"
+  }
+
   const prompt = `
     You will be given an article. Your task is to edit it to fit the following parameters:\n
     language: ${lang}\n
@@ -18,8 +24,7 @@ export async function generateArticle(content: ArticleContent, lang: "eng" | "ru
   `;
 
   const result = JSON.parse(await generateWithLlama(prompt));
-  result.mainImage = content.mainImageUrl;
-  console.log(result)
+  result.mainImageUrl = content.mainImageUrl;
   return result;
 }
 
