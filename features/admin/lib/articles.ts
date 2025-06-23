@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { Article, ArticleContent } from "../types/all";
+import { Article, ArticleContent } from "../../../types/all";
 
 export async function getArticleById(articleId: number): Promise<Article | null> {
   const article = await prisma.article.findUnique({
@@ -51,4 +51,39 @@ export async function createDraftArticle(articleContent: ArticleContent, authorI
       authorId: authorId
     }
   })) as Article;
+}
+
+export async function fetchDrafts(userId: number): Promise<Article[]> {
+  return (await prisma.article.findMany({
+    where: {
+      authorId: userId,
+      is_published: false
+    },
+    orderBy: {
+      updatedAt: "desc"
+    }
+  })) as Article[];
+}
+
+export async function fetchPublishedArticles(userId: number): Promise<Article[]> {
+  return (await prisma.article.findMany({
+    where: {
+      authorId: userId,
+      is_published: true
+    },
+    orderBy: {
+      updatedAt: "desc"
+    }
+  })) as Article[];
+}
+
+export async function fetchArticles(userId: number): Promise<Article[]> {
+  return (await prisma.article.findMany({
+    where: {
+      authorId: userId,
+    },
+    orderBy: {
+      updatedAt: "desc"
+    }
+  })) as Article[];
 }

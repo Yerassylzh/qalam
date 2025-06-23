@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import { generateArticle } from "../lib/llama";
 import SpinnerSvg from "@/features/authentication/components/form/SpinnerSvg";
 import { useRouter } from "next/navigation";
-import { Article } from "../types/all";
+import { Article } from "../../../types/all";
 import { createDraftArticle } from "../lib/articles";
 import { useAuth } from "@/context/AuthContext";
 
@@ -88,7 +88,7 @@ function useRedirectToDraftEditorOnArticleGenerated() {
         articleContent,
         user.id
       )) as Article;
-      router.push(`/admin/drafts/edit/${article.id}`);
+      router.push(`/admin/home/edit_article/${article.id}`);
     };
     wrapper();
   }, [router, articleContent, user]);

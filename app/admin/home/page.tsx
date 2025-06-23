@@ -2,10 +2,7 @@
 
 import GenerationInput from "@/features/admin/components/GenerationInput";
 import GenerationParameters from "@/features/admin/components/GenerationParameters";
-import {
-  GenerationProvider,
-  useGenerationContext,
-} from "@/features/admin/context/GenerationContext";
+import { GenerationProvider } from "@/features/admin/context/GenerationContext";
 import React from "react";
 
 export default function Wrapper() {
@@ -17,11 +14,9 @@ export default function Wrapper() {
 }
 
 export function Page() {
-  const { articleContent } = useGenerationContext();
-
   return (
     <div
-      className={`w-full min-h-screen flex flex-col items-center justify-center gap-[60px]`}
+      className={`w-full flex-1 flex flex-col items-center justify-center gap-[60px]`}
     >
       <div className="w-full flex flex-col items-center justify-center">
         <p className="text-bold md:text-[70px] text-[48px]">Сгенерировать</p>

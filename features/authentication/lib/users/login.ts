@@ -38,7 +38,7 @@ export async function login(prevState: object, formData: FormData, isAdmin: bool
   const passwordHash = await hashPassword(password);
 
   const user: User = (await prisma.user.findUnique({
-    where: { email: email, isAdmin: isAdmin ? isAdmin : false },
+    where: { email: email, isAdmin: isAdmin },
   })) as User;
 
   if (!user || user.password !== passwordHash) {

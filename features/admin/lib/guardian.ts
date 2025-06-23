@@ -1,6 +1,6 @@
 "use server";
 
-import { ArticleContent } from "../types/all";
+import { ArticleContent } from "../../../types/all";
 
 const baseUrl = "https://content.guardianapis.com";
 const apiKey = process.env.GUARDIAN_API_KEY as string;

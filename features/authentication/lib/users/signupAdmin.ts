@@ -107,5 +107,5 @@ export async function signup(prevState: object, formData: FormData) {
     duration
   );
 
-  redirect("/admin");
+  redirect("/admin/home");
 }

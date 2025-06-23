@@ -30,10 +30,10 @@ export default async function middleware(req: NextRequest) {
 
     if (userPayload?.user.isAdmin) {
       if (isProtectedRoute) {
-        return NextResponse.redirect(new URL("/admin", req.nextUrl));
+        return NextResponse.redirect(new URL("/admin/home", req.nextUrl));
       }
     } else {
-      if (path === "/admin") {
+      if (path.startsWith("/admin")) {
         return NextResponse.redirect(new URL("/", req.nextUrl));
       }
     }

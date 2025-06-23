@@ -7,7 +7,7 @@ import {
   useContext,
   useState,
 } from "react";
-import { ArticleContent } from "../types/all";
+import { ArticleContent } from "../../../types/all";
 
 interface GenerationContextType {
   language: "eng" | "ru" | "kk";

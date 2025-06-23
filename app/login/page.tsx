@@ -1,23 +1,23 @@
 "use client";
 
-import ArrowGreenButton from '@/features/authentication/components/form/ArrowGreenButton';
-import Input from '@/features/authentication/components/form/Input';
-import LabelledInput from '@/features/authentication/components/form/LabelledInput';
-import PasswordInput from '@/features/authentication/components/form/PasswordInput';
-import Navbar from '@/features/authentication/components/Navbar'
-import { login } from '@/features/authentication/lib/users/loginAdmin';
-import React, { useActionState, useCallback } from 'react'
+import ArrowGreenButton from "@/features/authentication/components/form/ArrowGreenButton";
+import Input from "@/features/authentication/components/form/Input";
+import LabelledInput from "@/features/authentication/components/form/LabelledInput";
+import PasswordInput from "@/features/authentication/components/form/PasswordInput";
+import Navbar from "@/features/authentication/components/Navbar";
+import { login } from "@/features/authentication/lib/users/login";
+import React, { useActionState, useCallback } from "react";
 
 export default function Page() {
   return (
-    <>
+    <div className="w-full flex flex-col min-h-screen">
       <Navbar />
-      <div className='w-full min-h-screen flex flex-col gap-[27px] justify-center items-center'>
-        <p className="text-[24px] font-semibold">Создайте аккаунт</p>
+      <div className="w-full flex-1 flex flex-col gap-[27px] justify-center items-center">
+        <p className="text-[24px] font-semibold">Войдите в аккаунт</p>
         <LoginForm />
       </div>
-    </>
-  )
+    </div>
+  );
 }
 
 type LoginState = {
@@ -28,7 +28,7 @@ type LoginState = {
   };
 };
 
-export function LoginForm() {
+function LoginForm() {
   const [loginData, loginAction, isPending] = useActionState(
     login,
     {} as LoginState
@@ -69,7 +69,7 @@ export function LoginForm() {
         label="Пароль"
         inputWidget={
           <PasswordInput
-            placeholder="Придумайте пароль"
+            placeholder="Введите пароль"
             name="password"
             error={getError("password")}
             defaultValue={loginData?.formData?.["password"]?.toString()}

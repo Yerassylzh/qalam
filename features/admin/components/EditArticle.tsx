@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Article, ArticleContent } from "../types/all";
+import { Article, ArticleContent } from "../../../types/all";
 import ArrowGreenButton from "@/features/authentication/components/form/ArrowGreenButton";
 import {
   getArticleById,
